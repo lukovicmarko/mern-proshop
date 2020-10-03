@@ -16,7 +16,7 @@ const ProductScreen = ({ match }) => {
         }
 
         fetchProduct();
-    }, []);
+    }, [match]);
 
     const { name, image, rating, numReviews, price, description, countInStock } = product;
 
