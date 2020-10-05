@@ -1,31 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Row, Col, Image, Card, ListGroup, Button } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import { Row, Col, Image, Card, ListGroup, Button, Form } from 'react-bootstrap';
 import Rating from '../components/Rating';
-import axios from 'axios';
+import Message from '../components/Message';
+import Loader from '../components/Loader';
+import { listProductDetails } from '../actions/productActions';
 
-const ProductScreen = ({ match }) => {
-    const [product, setProduct] = useState({});
+const ProductScreen = ({ history, match }) => {
+    const [quantity, setQuantity] = useState(0);
 
+
+    const dispatch = useDispatch();
+
+    const productDetails = useSelector(state => state.productDetails);
+    const { loading, error, product } = productDetails;
 
     useEffect(() => {
-        const fetchProduct = async () => {
-            const { data } = await axios.get(`/api/products/${match.params.id}`);
+        dispatch(listProductDetails(match.params.id));
+    }, [dispatch, match]);
 
-            setProduct(data);
-        }
 
-        fetchProduct();
-    }, [match]);
+    const addToCart = () => {
+        history.push(`/cart/${match.params.id}?quantity=${quantity}`);
+    }
 
     const { name, image, rating, numReviews, price, description, countInStock } = product;
 
     return (
+
         <>
             <Link className="btn btn-light my-3" to="/">
                 Go Back
             </Link>
-            <Row>
+            {loading ? <Loader /> : error ? <Message variant="danger">{error}</Message> : <Row>
                 <Col md={6}>
                     <Image src={image} alt={name} fluid />
                 </Col>
@@ -73,11 +81,40 @@ const ProductScreen = ({ match }) => {
                                     </Col>
                                 </Row>
                             </ListGroup.Item>
+
+                            {
+                                countInStock > 0 && (
+                                    <ListGroup.Item>
+                                        <Row>
+                                            <Col>
+                                                Qty
+                                            </Col>
+                                            <Col>
+                                                <Form.Control
+                                                    as="select"
+                                                    value={quantity}
+                                                    onChange={(e) => setQuantity(e.target.value)}
+                                                >
+                                                    {
+                                                        [...Array(countInStock).keys()].map(x => (
+                                                            <option key={x + 1} value={x + 1}>
+                                                                {x + 1}
+                                                            </option>
+                                                        ))
+                                                    }
+                                                </Form.Control>
+                                            </Col>
+                                        </Row>
+                                    </ListGroup.Item>
+                                )
+                            }
+
                             <ListGroup.Item>
                                 <Button
                                     className="btn-block"
                                     type="button"
                                     disabled={countInStock === 0}
+                                    onClick={addToCart}
                                 >
                                     Add To Cart
                             </Button>
@@ -86,7 +123,7 @@ const ProductScreen = ({ match }) => {
                     </Card>
                 </Col>
             </Row>
-
+            }
         </>
     )
 }
