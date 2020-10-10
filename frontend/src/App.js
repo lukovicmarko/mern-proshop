@@ -12,6 +12,8 @@ import LoginScreen from '../src/screens/LoginScreen';
 import RegisterScreen from '../src/screens/RegisterScreen';
 import ProfileScreen from '../src/screens/ProfileScreen';
 import ShippingScreen from '../src/screens/ShippingScreen';
+import PaymentScreen from '../src/screens/PaymentScreen';
+import PlaceOrderScreen from '../src/screens/PlaceOrderScreen';
 
 function App() {
   return (
@@ -26,6 +28,8 @@ function App() {
           <Route path="/register" component={RegisterScreen} />
           <Route path="/profile" component={ProfileScreen} />
           <Route path="/shipping" component={ShippingScreen} />
+          <Route path="/payment" component={PaymentScreen} />
+          <Route path="/placeorder" component={PlaceOrderScreen} />
         </Container>
       </main>
       <Footer />
