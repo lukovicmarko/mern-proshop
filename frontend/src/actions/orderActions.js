@@ -9,7 +9,6 @@ import {
     ORDER_PAY_FAIL,
     ORDER_PAY_SUCCESS,
     ORDER_PAY_REQUEST,
-
     ORDER_LIST_MY_REQUEST,
     ORDER_LIST_MY_SUCCESS,
     ORDER_LIST_MY_FAIL,
@@ -19,11 +18,11 @@ import {
     ORDER_DELIVER_FAIL,
     ORDER_DELIVER_SUCCESS,
     ORDER_DELIVER_REQUEST,
-} from '../constants/orderContacts';
+} from '../constants/orderConstants';
 
 import { logout } from './userActions';
 
-export const createOrder = (order) => async (dispatch, getState) => {
+export const createOrder = order => async (dispatch, getState) => {
     try {
         dispatch({
             type: ORDER_CREATE_REQUEST,
@@ -40,7 +39,7 @@ export const createOrder = (order) => async (dispatch, getState) => {
             },
         }
 
-        const { data } = await axios.post(`/api/orders`, order, config)
+        const { data } = await axios.post(`/api/orders`, order, config);
 
         dispatch({
             type: ORDER_CREATE_SUCCESS,
